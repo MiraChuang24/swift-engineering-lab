@@ -1,11 +1,15 @@
-# 01 值與參考語意
+# 01. Value Type vs Reference Type
 
 > **TL;DR**
 > - 複製 struct 會複製整個值；複製 class 只複製參考，兩個變數指向同一個實例。
 > - struct 內含 class 時，複製 struct **不會**深層複製該 class，修改共享實例的狀態會互相影響，替換參考則不會。
 > - `let` 鎖住的是「這個變數本身的值」：對 struct 是整個值，對 class 是參考，不是實例的內容。
 
-日期：2026-10-14 ・ 環境：Xcode 26.0.1 / Swift 6.2 ・ 測試：[Tests/ValueAndReferenceTests.swift](Tests/ValueAndReferenceTests.swift)（執行 `swift test`）
+日期：2026-10-14
+
+環境：Xcode 26.0.1 / Swift 6.2
+
+測試：[Tests/ValueAndReferenceTests.swift](Tests/ValueAndReferenceTests.swift)（執行 `swift test`）
 
 ## 想釐清的問題
 
@@ -16,7 +20,7 @@
 
 ## 原本理解與預測
 
-> 這一段是實驗前寫的，事後只修正錯字，保留原本的想法，方便對照「理解修正」。
+> 這一段是實驗前寫的，保留原本的想法，方便對照「理解修正」。
 
 ### 1. 複製 struct 與 class，分別複製了什麼？
 
@@ -158,7 +162,7 @@ a.name = "Boat"              // 可以編譯
 | 做法 | 實作 | 優點 | 代價 |
 | --- | --- | --- | --- |
 | E1 成員全為值型別 | `Person` 改成 struct | 最簡單，語意最清楚 | 不能保留 identity；大型資料每次複製可能有成本 |
-| E2 不可變 class | `Person` 的屬性全改成 `let`，修改時建立新實例（`renamed(_:)`） | 共享也安全，保留 class 的能力 | 每次修改都要配置新物件，API 較囉唆 |
+| E2 不可變 class | `Person` 的屬性全改成 `let`，修改時建立新實例（`renamed(_:)`） | 共享也安全（本例為 final class，屬性皆為不可變的值型別） | 每次修改都要配置新物件，API 較囉唆 |
 | E3 Copy-on-Write | struct 包一個私有 class 儲存體，寫入前用 `isKnownUniquelyReferenced` 檢查，被共享才複製 | 複製很便宜（只複製參考），對外仍是值語意；`Array`、`String` 就是這樣實作的 | 實作較複雜，每個 setter 都要記得呼叫 `makeUniqueIfNeeded()` |
 
 完整實作見 [Tests/Models.swift](Tests/Models.swift)。E3 的關鍵行為由測試驗證：
@@ -183,7 +187,7 @@ Apple 的建議是**預設使用 struct**，以下情況才選 class：
 - 需要**共享的可變狀態**：多處要看到同一份更新（在並行環境下要考慮改用 `actor`）。
 - 需要**繼承**，或要和 **Objective-C** 互通（`NSObject` 子類別）。
 
-使用 class 的代價：引用計數（ARC）的開銷、可能出現循環參考，以及共享可變狀態帶來的推理成本。
+使用 class 的代價：引用計數（ARC）的開銷、可能出現強引用循環，以及共享可變狀態帶來的推理成本。
 
 比較運算子：
 
@@ -192,7 +196,7 @@ Apple 的建議是**預設使用 struct**，以下情況才選 class：
 
 ## 小結
 
-> struct 是值型別，複製時會產生獨立的複本；class 是參考型別，複製的只是參考，多個變數會共享同一個實例。要注意的是 struct 裡如果包含 class，複製 struct 並不會深層複製那個物件，所以會出現看似是值、其實共享狀態的情況。解法可以讓成員都是值型別、讓 class 不可變，或像 Array 一樣實作 Copy-on-Write。我平常預設用 struct，需要 identity、共享狀態或繼承時才用 class
+> struct 是值型別，複製時會產生獨立的複本；class 是參考型別，複製的只是參考，多個變數會共享同一個實例。要注意的是 struct 裡如果包含 class，複製 struct 並不會深層複製那個物件，所以會出現看似是值、其實共享狀態的情況。解法可以讓成員都是值型別、讓 class 不可變，或像 Array 一樣實作 Copy-on-Write。我平常預設用 struct，需要 identity、共享狀態或繼承時才用 class。
 
 ## 延伸問題
 

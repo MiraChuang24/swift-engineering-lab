@@ -10,7 +10,7 @@ Small, runnable experiments that verify how Swift and iOS actually behave, cover
 
 | # | 主題 | 研究問題 | 關鍵收穫 |
 | --- | --- | --- | --- |
-| 01 | [值與參考語意](swift/01-value-and-reference-semantics/README.md) | 複製 struct、class，以及內含 class 的 struct，分別會發生什麼？ | struct 內含 class 會破壞值語意；比較三種修法，包含自己實作 Copy-on-Write |
+| 01 | [Value Type vs Reference Type](swift/01-value-and-reference-semantics/README.md) | 複製 struct、class，以及內含 class 的 struct，分別會發生什麼？ | struct 內含 class 會破壞值語意；比較三種修法，包含自己實作 Copy-on-Write |
 
 ## 執行方式
 
