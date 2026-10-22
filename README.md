@@ -11,6 +11,7 @@ Small, runnable experiments that verify how Swift and iOS actually behave, cover
 | # | 主題 | 研究問題 | 關鍵收穫 |
 | --- | --- | --- | --- |
 | 01 | [Value Type vs Reference Type](swift/01-value-and-reference-semantics/README.md) | 複製 struct、class，以及內含 class 的 struct，分別會發生什麼？ | struct 內含 class 會破壞值語意；比較三種修法，包含自己實作 Copy-on-Write |
+| 02 | [ARC 與實例生命週期](swift/02-arc-and-object-lifetime/README.md) | 強引用循環如何形成？`weak`、`unowned` 與 closure capture list 該怎麼選？ | `unowned` 的安全靠開發者維持生命週期契約；closure 要不要強捕獲，取決於由誰持有與工作是否必須完成 |
 
 ## 執行方式
 
