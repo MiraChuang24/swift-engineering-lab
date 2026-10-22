@@ -12,6 +12,7 @@ import PackageDescription
 // 新增實驗時，在 experiments 陣列加一行即可。
 let experiments: [(name: String, path: String)] = [
     ("E01ValueAndReferenceTests", "swift/01-value-and-reference-semantics/Tests"),
+    ("E02ARCTests", "swift/02-arc-and-object-lifetime/Tests"),
 ]
 
 let package = Package(
