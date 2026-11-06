@@ -13,6 +13,7 @@ import PackageDescription
 let experiments: [(name: String, path: String)] = [
     ("E01ValueAndReferenceTests", "swift/01-value-and-reference-semantics/Tests"),
     ("E02ARCTests", "swift/02-arc-and-object-lifetime/Tests"),
+    ("E03ClosureCaptureTests", "swift/03-closures-and-capture/Tests"),
 ]
 
 let package = Package(
